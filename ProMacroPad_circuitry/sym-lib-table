@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name "raspberrypi-gpio-40pin-rescue")(type "Legacy")(uri "${KIPRJMOD}/raspberrypi-gpio-40pin-rescue.lib")(options "")(descr ""))
+)
