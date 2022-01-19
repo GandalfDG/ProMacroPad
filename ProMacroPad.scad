@@ -1,6 +1,3 @@
-use <BOSL/transforms.scad>
-include <NopSCADlib/core.scad>
-include <NopSCADlib/vitamins/pcbs.scad>
 
 overall_dimensions = [130, 200, 60];
 stock_thickness = 2.3;
@@ -86,8 +83,8 @@ module display_plate(size) {
 
 module base_plate(size) {
     square(size);
-    back(40)tab2d(size.x, size.y/2 - 20);
-    back(140)tab2d(size.x, size.y/2 - 20);
+    translate([0,40,0])tab2d(size.x, size.y/2 - 20);
+    translate([0,140,0])tab2d(size.x, size.y/2 - 20);
 }
  
 module mounting_plates() {
@@ -101,7 +98,7 @@ module mounting_plates() {
             // Display Plate
             translate([0,display_back_distance,display_plate_height])
                 rotate([display_angle,0,0])
-                down(stock_thickness)
+                translate([0,0,-stock_thickness])
                 linear_extrude(stock_thickness)
                 display_plate([keypad_width, display_height]);
         }
@@ -117,7 +114,7 @@ module mounting_plates() {
 module side_panel() {
     module slots2d() {
         offset(tab_tolerance)projection()intersection() {
-            down(overall_dimensions.x + tab_depth + 1)zrot(-90)yrot(-90)mounting_plates();
+            translate([0,0,-(overall_dimensions.x + tab_depth + 1)])rotate([0,0,-90])rotate([0,-90,0])mounting_plates();
             cube([overall_dimensions.y, overall_dimensions.z, 2]);
         }
     }
@@ -141,7 +138,7 @@ module side_panel() {
         [overall_dimensions.y,-base_inset]
         ]);
     }
-    yrot(90)zrot(90)
+    rotate([0,90,0])rotate([0,0,90])
     linear_extrude(stock_thickness)difference() {
         side_polygon();
         slots2d();
@@ -149,8 +146,6 @@ module side_panel() {
 }
 color("Sienna"){
     side_panel();
-    right(keypad_width+tab_depth)side_panel();
+    translate([keypad_width+tab_depth,0,0])side_panel();
 }
 mounting_plates();
-translate([keypad_width/2 + tab_depth,overall_dimensions.y - 30,stock_thickness + 1])zrot(180)pcb(RPI0);
-
