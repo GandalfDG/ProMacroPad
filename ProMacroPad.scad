@@ -11,10 +11,10 @@ back_inset = 10;
 base_inset = 3;
 
 keypad_plate_height = 30;
-display_plate_height = 35;
+display_plate_height = 32;
 display_back_distance = 130;
 
-side_allowance = 8;
+side_allowance = 5;
 
 tab_length = 40;
 tab_depth = stock_thickness;
@@ -24,7 +24,7 @@ keypad_width = 130;
 keypad_height = 115;
 
 display_height = 60;
-display_angle = 40;
+display_angle = 30;
 display_dimensions = [90,35];
 
 function display_top_coords() = [0,display_back_distance + cos(display_angle) * display_height,display_plate_height + sin(display_angle) * display_height];
@@ -123,16 +123,21 @@ module side_panel() {
     }
     
     module side_polygon() {
-        function difficult_point() = 
-            1/tan(display_angle) * (display_plate_height - keypad_plate_height) 
-            + (1/cos(display_angle) * side_allowance);
-        function back_corner_x() = display_top_coords().y + side_allowance;
-        function back_corner_y() = tan(display_angle) * (side_allowance + (1/tan(display_angle) * side_allowance)) + display_top_coords().z;
+        d2 = display_plate_height - (keypad_plate_height + side_allowance);
+        d3 = side_allowance/cos(display_angle);
+        x = d2+d3/tan(display_angle);
+        hard_point_1 = [display_back_distance - x, keypad_plate_height + side_allowance];
+        
+        d4 = side_allowance / sin(display_angle);
+        d5 = (side_allowance + d4) * tan(display_angle);
+        y = display_top_coords().z + d5;
+        hard_point_2 = [display_top_coords().y + side_allowance, y];
+
         polygon([
         [0,-base_inset],
         [10,keypad_plate_height + side_allowance],
-        [display_back_distance - difficult_point(), keypad_plate_height + side_allowance],
-        [back_corner_x(), back_corner_y()], 
+        hard_point_1,
+        hard_point_2, 
         [overall_dimensions.y,-base_inset]
         ]);
     }
