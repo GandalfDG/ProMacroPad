@@ -39,8 +39,12 @@ module mounting_holes_2d(rows, columns, spacing) {
     }
 }
 
-module tab2d(plate_width, length) {
-    translate([plate_width/2,0])square([plate_width+2*tab_depth, length],center=true);
+module tabs2d(plate_dimensions, num_tabs, tab_length, end_spacing) {
+    tab_spacing = (plate_dimensions.y - 2*end_spacing - num_tabs*tab_length)/(num_tabs-1);
+    for(tab=[0:num_tabs-1]) {
+        translate([-tab_depth, end_spacing + (tab_length+tab_spacing) * tab, 0])
+        square([plate_dimensions.x+2*tab_depth, tab_length]);
+    }
 }
 
 module keypad_plate() {
@@ -55,8 +59,7 @@ module keypad_plate() {
     module plate_frame(size) {
         square([size.x,size.y]);
         // two tabs on each side
-        translate([size.x/2,90])square([size.x + 2*tab_depth, tab_length],center=true);
-        translate([size.x/2,30])square([size.x + 2*tab_depth, tab_length],center=true);
+        tabs2d([size.x,size.y], 2, 40, 10);
     }
 
     module key_array(rows, columns, spacing) {
@@ -76,7 +79,7 @@ module keypad_plate() {
 module display_plate(size) {
     module display_frame(size) {
         square(size);
-        translate([0,size.y/2])tab2d(size.x, size.y - 10);
+        tabs2d(size, 2, 20, 5);
     }
 
     difference() {
@@ -89,8 +92,7 @@ module display_plate(size) {
 
 module base_plate(size) {
     square(size);
-    translate([0,40,0])tab2d(size.x, size.y/2 - 20);
-    translate([0,140,0])tab2d(size.x, size.y/2 - 20);
+    tabs2d(size, 4, 30, 5);
 }
  
 module mounting_plates() {
