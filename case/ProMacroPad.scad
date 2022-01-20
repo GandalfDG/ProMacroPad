@@ -59,7 +59,7 @@ module keypad_plate() {
     module plate_frame(size) {
         square([size.x,size.y]);
         // two tabs on each side
-        tabs2d([size.x,size.y], 2, 40, 10);
+        tabs2d([size.x,size.y], 2, 45, 5);
     }
 
     module key_array(rows, columns, spacing) {
@@ -92,7 +92,7 @@ module display_plate(size) {
 
 module base_plate(size) {
     square(size);
-    tabs2d(size, 4, 30, 5);
+    tabs2d(size, 3, 40, 5);
 }
  
 module mounting_plates() {
@@ -113,7 +113,7 @@ module mounting_plates() {
         
         color("DimGray")
             // Base Plate
-            translate([0, base_inset, 0])
+            translate([0, front_inset, 0])
             linear_extrude(stock_thickness)
             base_plate([keypad_width, overall_footprint.y - front_inset - back_inset]);
     }
@@ -139,7 +139,7 @@ module side_panel() {
         hard_point_2 = [display_top_coords().y + side_allowance, y];
 
         offset(3)polygon([
-        [0,base_inset - side_allowance],
+        [front_inset - side_allowance, -base_inset],
         [front_inset - side_allowance,keypad_plate_height + side_allowance],
         hard_point_1,
         hard_point_2, 
