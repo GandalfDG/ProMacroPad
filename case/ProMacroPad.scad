@@ -7,8 +7,8 @@ front_inset = 10;
 back_inset = 10;
 base_inset = 3;
 
-keypad_plate_height = 30;
-display_plate_height = 32;
+keypad_plate_height = 20;
+display_plate_height = 25;
 display_back_distance = 130;
 
 side_allowance = 5;
@@ -122,7 +122,7 @@ module side_panel() {
     module side_polygon() {
         d2 = display_plate_height - (keypad_plate_height + side_allowance);
         d3 = side_allowance/cos(display_angle);
-        x = d2+d3/tan(display_angle);
+        x = (d2+d3)/tan(display_angle);
         hard_point_1 = [display_back_distance - x, keypad_plate_height + side_allowance];
         
         d4 = side_allowance / sin(display_angle);
