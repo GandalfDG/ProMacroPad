@@ -105,7 +105,7 @@ module mounting_plates() {
         
         color("DimGray")
             // Base Plate
-            translate([0, front_inset, 0])
+            translate([0, base_inset, 0])
             linear_extrude(stock_thickness)
             base_plate([keypad_width, overall_dimensions.y - front_inset - back_inset]);
     }
@@ -130,9 +130,9 @@ module side_panel() {
         y = display_top_coords().z + d5;
         hard_point_2 = [display_top_coords().y + side_allowance, y];
 
-        polygon([
-        [0,-base_inset],
-        [10,keypad_plate_height + side_allowance],
+        offset(3)polygon([
+        [0,base_inset - side_allowance],
+        [front_inset - side_allowance,keypad_plate_height + side_allowance],
         hard_point_1,
         hard_point_2, 
         [overall_dimensions.y,-base_inset]
