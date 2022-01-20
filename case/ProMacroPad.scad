@@ -1,17 +1,23 @@
 
-overall_dimensions = [130, 200, 60];
+overall_footprint = [130, 180];
+// Thickness of the stock to laser cut
 stock_thickness = 2.3;
+
+// Diameter of mounting holes
 hole_diameter = 3.75;
+
+// overhang of side panels beyond plates
+side_allowance = 5;
+
+keypad_plate_height = 20;
+display_plate_height = 25;
+display_angle = 25;
 
 front_inset = 10;
 back_inset = 10;
 base_inset = 3;
 
-keypad_plate_height = 20;
-display_plate_height = 25;
 display_back_distance = 130;
-
-side_allowance = 5;
 
 tab_length = 40;
 tab_depth = stock_thickness;
@@ -21,7 +27,7 @@ keypad_width = 130;
 keypad_height = 115;
 
 display_height = 60;
-display_angle = 30;
+
 display_dimensions = [90,35];
 
 function display_top_coords() = [0,display_back_distance + cos(display_angle) * display_height,display_plate_height + sin(display_angle) * display_height];
@@ -107,15 +113,15 @@ module mounting_plates() {
             // Base Plate
             translate([0, base_inset, 0])
             linear_extrude(stock_thickness)
-            base_plate([keypad_width, overall_dimensions.y - front_inset - back_inset]);
+            base_plate([keypad_width, overall_footprint.y - front_inset - back_inset]);
     }
 }
 
 module side_panel() {
     module slots2d() {
         offset(tab_tolerance)projection()intersection() {
-            translate([0,0,-(overall_dimensions.x + tab_depth + 1)])rotate([0,0,-90])rotate([0,-90,0])mounting_plates();
-            cube([overall_dimensions.y, overall_dimensions.z, 2]);
+            translate([0,0,-(overall_footprint.x + tab_depth + 1)])rotate([0,0,-90])rotate([0,-90,0])mounting_plates();
+            cube([overall_footprint.y, display_top_coords().z, 2]);
         }
     }
     
@@ -135,7 +141,7 @@ module side_panel() {
         [front_inset - side_allowance,keypad_plate_height + side_allowance],
         hard_point_1,
         hard_point_2, 
-        [overall_dimensions.y,-base_inset]
+        [overall_footprint.y,-base_inset]
         ]);
     }
     rotate([0,90,0])rotate([0,0,90])
