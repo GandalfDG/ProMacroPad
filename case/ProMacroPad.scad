@@ -1,5 +1,5 @@
 
-overall_footprint = [130, 180];
+
 // Thickness of the stock to laser cut
 stock_thickness = 2.3;
 
@@ -31,6 +31,8 @@ keypad_height = 115;
 display_height = 60;
 
 display_dimensions = [90,35];
+
+overall_footprint = [114.35 + 2*pcb_frame_offset, 180];
 
 function display_top_coords() = [0,display_back_distance + cos(display_angle) * display_height,display_plate_height + sin(display_angle) * display_height];
 
@@ -111,11 +113,13 @@ module display_plate() {
     display_inset = [0.6,10.05];
     
     display_tolerance = .5;
-    offset_dimensions = [pcb_dimensions.x+2*pcb_frame_offset, pcb_dimensions.y+2*pcb_frame_offset];
+    offset_dimensions = [overall_footprint.x, pcb_dimensions.y+2*pcb_frame_offset];
+    
+    frame_x_offset = (overall_footprint.x - pcb_dimensions.x) / 2;
     
     module display_frame() {
-        offset(delta=pcb_frame_offset)square(pcb_dimensions);
-        translate([-pcb_frame_offset,-pcb_frame_offset,0])
+        translate([-frame_x_offset, -pcb_frame_offset,0])square([overall_footprint.x, pcb_dimensions.y+2*pcb_frame_offset]);
+        translate([-frame_x_offset,-pcb_frame_offset,0])
             tabs2d(offset_dimensions, 2, 20, 5);
     }
     
@@ -124,7 +128,7 @@ module display_plate() {
         translate([hole_inset.x,hole_inset.y,0])mounting_holes_2d(2, 2, hole_spacing, mounting_hole_diameter);
     }
 
-    difference() {
+    translate([frame_x_offset,pcb_frame_offset,0])difference() {
         display_frame();
         cutouts();
     }
@@ -145,7 +149,7 @@ module mounting_plates() {
                 keypad_plate();
             
             // Display Plate
-            translate([pcb_frame_offset,display_back_distance,display_plate_height])
+            translate([0,display_back_distance,display_plate_height])
                 rotate([display_angle,0,0])
                 translate([0,0,-stock_thickness])
                 linear_extrude(stock_thickness)
