@@ -12,7 +12,7 @@ side_allowance = 5;
 pcb_frame_offset = 10;
 
 keypad_plate_height = 20;
-display_plate_height = 25;
+display_plate_height = 12;
 display_angle = 20;
 
 front_inset = 10;
@@ -28,6 +28,7 @@ tab_tolerance = .2;
 keypad_width = 130;
 keypad_height = 115;
 
+// FIXME
 display_height = 59.90 + 2*pcb_frame_offset;
 
 display_dimensions = [90,35];
@@ -124,8 +125,10 @@ module display_plate() {
     }
     
     module cutouts() {
-        translate([display_inset.x, display_inset.y,0])offset(delta=display_tolerance)square(screen_dimensions);
-        translate([hole_inset.x,hole_inset.y,0])mounting_holes_2d(2, 2, hole_spacing, hole_diameter);
+        offset(delta=display_tolerance)
+        translate([display_inset.x, display_inset.y,0])square(screen_dimensions);
+        translate([hole_inset.x,hole_inset.y,0])
+        mounting_holes_2d(2, 2, hole_spacing, hole_diameter);
     }
 
     translate([frame_x_offset,pcb_frame_offset,0])difference() {
