@@ -4,10 +4,12 @@ overall_footprint = [130, 180];
 stock_thickness = 2.3;
 
 // Diameter of mounting holes
-hole_diameter = 3.75;
+hole_diameter = 3;
 
 // overhang of side panels beyond plates
 side_allowance = 5;
+
+pcb_frame_offset = 10;
 
 keypad_plate_height = 20;
 display_plate_height = 25;
@@ -32,10 +34,11 @@ display_dimensions = [90,35];
 
 function display_top_coords() = [0,display_back_distance + cos(display_angle) * display_height,display_plate_height + sin(display_angle) * display_height];
 
-module mounting_holes_2d(rows, columns, spacing) {
+module mounting_holes_2d(rows, columns, spacing, diameter) {
     for(row=[0:rows-1], col=[0:columns-1]) {
-        translate([col * spacing.x, row * spacing.y])
-            circle(hole_diameter);
+        translate([diameter/2,diameter/2,0])
+        translate([(spacing.x+diameter)*col,(spacing.y+diameter)*row])    
+        circle(diameter/2);
     }
 }
 
@@ -48,31 +51,53 @@ module tabs2d(plate_dimensions, num_tabs, tab_length, end_spacing) {
 }
 
 module keypad_plate() {
+    // Measured from Adafruit NeoKey 5x6 Ortho Snap-Apart PCB
+    pcb_dimensions = [114.35,115.55];
+    
+    mounting_hole_diameter = 2.90;
+    mounting_hole_inset = [3.60,3.55]; // from PCB edge to hole edge
+    mounting_hole_spacing = [100.10,102.50]; // between nearest hole edges
+    
+    keyswitch_inset = [2.65,12.20];
+    
+    // Preferences
+    
+    
+    // Calculated
+    frame_dimensions = [pcb_dimensions.x+pcb_frame_offset*2, pcb_dimensions.y+pcb_frame_offset*2];
+    
     key_rows = 5;
     key_cols = 6;
 
     key_width = 14;
     key_height = key_width;
 
-    mounting_hole_spacing = [110, 105];
-
     module plate_frame(size) {
-        square([size.x,size.y]);
+        translate([pcb_frame_offset,pcb_frame_offset,0])
+        offset(delta=pcb_frame_offset)
+        square(pcb_dimensions);
         // two tabs on each side
-        tabs2d([size.x,size.y], 2, 45, 5);
+        tabs2d(frame_dimensions, 2, 45, 5);
     }
 
     module key_array(rows, columns, spacing) {
         for(row=[0:rows-1], col=[0:columns-1]) {
-            translate([col * (key_width + spacing), row * (key_width + spacing),0])
-                square([key_width, key_height]);
+            translate([col * (key_width + spacing), 
+                row * (key_width + spacing),0])
+            square([key_width, key_height]);
         }
     }
 
     difference() {
-        plate_frame([keypad_width,120]);
-        translate([10,15])key_array(key_rows,key_cols,5);
-        translate([10,8])mounting_holes_2d(2, 2, mounting_hole_spacing);
+        plate_frame([keypad_width, keypad_height]);
+        
+        translate([keyswitch_inset.x+pcb_frame_offset,
+            keyswitch_inset.y+pcb_frame_offset,0])
+        key_array(key_rows,key_cols,5.10);
+        
+        translate([mounting_hole_inset.x+pcb_frame_offset,
+            mounting_hole_inset.y+pcb_frame_offset,0])
+        mounting_holes_2d(2, 2, mounting_hole_spacing, hole_diameter);
     }
 }
 
@@ -85,7 +110,7 @@ module display_plate(size) {
     difference() {
         display_frame([size.x,size.y]);
         translate([size.x/2,size.y/2])square(display_dimensions, center=true);
-        translate([10, 20])mounting_holes_2d(2, 2, [105, 30]);
+        translate([10, 20])mounting_holes_2d(2, 2, [105, 30], hole_diameter);
     }
     
 }
