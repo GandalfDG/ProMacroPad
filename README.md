@@ -14,4 +14,10 @@ That's where the ProMacroPad comes in.
 - 4 channel I2C logic level converter
 - Adafruit NeoKey 5x6 Ortho Snap-Apart Mechanical Key Switch PCB
 - 30 Cherry MX compatible switches
-- Raspberry Pi Zero
+- 30 1u keycaps - my layout uses 0-9, A-F, arrow keys, F1-F4, and a few extras for various applications
+- Raspberry Pi Zero, or a microcontroller with at least an I2C channel, and 11 gpio pins to address the key matrix, and the ability to appear as a USB HID device
+- M2.5 standoffs, screws, and nuts for mounting components to the case
+
+## Components to be built
+- Laser-cut case
+- Perfboard to wire up the keypad and display
