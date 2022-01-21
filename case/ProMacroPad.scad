@@ -200,10 +200,14 @@ module pieces_2d() {
     translate([overall_footprint.x * 2 + 30,100,0])side_panel();
 }
 
-pieces_2d();
 
-//*mounting_plates();
-//*color("Sienna"){
-//    side_panel();
-//    translate([overall_footprint.x+tab_depth,0,0])side_panel();
-//}
+module 3d_mockup() {
+    mounting_plates();
+    color("Sienna"){
+        rotate([0,90,0])rotate([0,0,90])linear_extrude(stock_thickness)side_panel();
+        translate([overall_footprint.x+tab_depth,0,0])rotate([0,90,0])rotate([0,0,90])linear_extrude(stock_thickness)side_panel();
+    }
+}
+
+*pieces_2d();
+3d_mockup();
