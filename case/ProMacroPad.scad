@@ -38,7 +38,7 @@ module mounting_holes_2d(rows, columns, spacing, diameter) {
     for(row=[0:rows-1], col=[0:columns-1]) {
         translate([diameter/2,diameter/2,0])
         translate([(spacing.x+diameter)*col,(spacing.y+diameter)*row])    
-        circle(diameter/2);
+        circle(d=diameter);
     }
 }
 
@@ -56,7 +56,7 @@ module keypad_plate() {
     
     mounting_hole_diameter = 2.90;
     mounting_hole_inset = [3.60,3.55]; // from PCB edge to hole edge
-    mounting_hole_spacing = [100.10,102.50]; // between nearest hole edges
+    mounting_hole_spacing = [101.20,102.50]; // between nearest hole edges
     
     keyswitch_inset = [2.65,12.20];
     
@@ -101,16 +101,32 @@ module keypad_plate() {
     }
 }
 
-module display_plate(size) {
-    module display_frame(size) {
-        square(size);
-        tabs2d(size, 2, 20, 5);
+module display_plate() {
+    // measured from LCD module
+    screen_dimensions = [97.10, 39.65];
+    pcb_dimensions = [98.25,59.90];
+    mounting_hole_diameter = 3.45;
+    hole_inset = [1.05,0.7];
+    hole_spacing = [89.60, 51.50];
+    display_inset = [0.6,10.05];
+    
+    display_tolerance = .5;
+    offset_dimensions = [pcb_dimensions.x+2*pcb_frame_offset, pcb_dimensions.y+2*pcb_frame_offset];
+    
+    module display_frame() {
+        offset(delta=pcb_frame_offset)square(pcb_dimensions);
+        translate([-pcb_frame_offset,-pcb_frame_offset,0])
+            tabs2d(offset_dimensions, 2, 20, 5);
+    }
+    
+    module cutouts() {
+        translate([display_inset.x, display_inset.y,0])offset(delta=display_tolerance)square(screen_dimensions);
+        translate([hole_inset.x,hole_inset.y,0])mounting_holes_2d(2, 2, hole_spacing, mounting_hole_diameter);
     }
 
     difference() {
-        display_frame([size.x,size.y]);
-        translate([size.x/2,size.y/2])square(display_dimensions, center=true);
-        translate([10, 20])mounting_holes_2d(2, 2, [105, 30], hole_diameter);
+        display_frame();
+        cutouts();
     }
     
 }
@@ -129,11 +145,11 @@ module mounting_plates() {
                 keypad_plate();
             
             // Display Plate
-            translate([0,display_back_distance,display_plate_height])
+            translate([pcb_frame_offset,display_back_distance,display_plate_height])
                 rotate([display_angle,0,0])
                 translate([0,0,-stock_thickness])
                 linear_extrude(stock_thickness)
-                display_plate([keypad_width, display_height]);
+                display_plate();
         }
         
         color("DimGray")
@@ -177,7 +193,7 @@ module side_panel() {
         slots2d();
     }
 }
-color("Sienna"){
+*color("Sienna"){
     side_panel();
     translate([keypad_width+tab_depth,0,0])side_panel();
 }
