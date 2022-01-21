@@ -8,3 +8,10 @@ I could buy that could handle these basic conversion tasks, but everything I fou
 leaky AA batteries.
 
 That's where the ProMacroPad comes in.
+
+## Off-the-shelf Components
+- 20 x 4 Character LCD with I2C backpack
+- 4 channel I2C logic level converter
+- Adafruit NeoKey 5x6 Ortho Snap-Apart Mechanical Key Switch PCB
+- 30 Cherry MX compatible switches
+- Raspberry Pi Zero
