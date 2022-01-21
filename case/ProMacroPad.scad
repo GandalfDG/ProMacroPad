@@ -13,13 +13,13 @@ pcb_frame_offset = 10;
 
 keypad_plate_height = 20;
 display_plate_height = 25;
-display_angle = 25;
+display_angle = 20;
 
 front_inset = 10;
 back_inset = 10;
 base_inset = 3;
 
-display_back_distance = 130;
+display_back_distance = 135;
 
 tab_length = 40;
 tab_depth = stock_thickness;
@@ -28,7 +28,7 @@ tab_tolerance = .2;
 keypad_width = 130;
 keypad_height = 115;
 
-display_height = 60;
+display_height = 59.90 + 2*pcb_frame_offset;
 
 display_dimensions = [90,35];
 
@@ -40,7 +40,7 @@ module mounting_holes_2d(rows, columns, spacing, diameter) {
     for(row=[0:rows-1], col=[0:columns-1]) {
         translate([diameter/2,diameter/2,0])
         translate([(spacing.x+diameter)*col,(spacing.y+diameter)*row])    
-        circle(d=diameter);
+        circle(d=diameter, $fs=.3);
     }
 }
 
@@ -56,7 +56,7 @@ module keypad_plate() {
     // Measured from Adafruit NeoKey 5x6 Ortho Snap-Apart PCB
     pcb_dimensions = [114.35,115.55];
     
-    mounting_hole_diameter = 2.90;
+    mounting_hole_diameter = hole_diameter;
     mounting_hole_inset = [3.60,3.55]; // from PCB edge to hole edge
     mounting_hole_spacing = [101.20,102.50]; // between nearest hole edges
     
@@ -120,12 +120,12 @@ module display_plate() {
     module display_frame() {
         translate([-frame_x_offset, -pcb_frame_offset,0])square([overall_footprint.x, pcb_dimensions.y+2*pcb_frame_offset]);
         translate([-frame_x_offset,-pcb_frame_offset,0])
-            tabs2d(offset_dimensions, 2, 20, 5);
+            tabs2d(offset_dimensions, 2, 25, 5);
     }
     
     module cutouts() {
         translate([display_inset.x, display_inset.y,0])offset(delta=display_tolerance)square(screen_dimensions);
-        translate([hole_inset.x,hole_inset.y,0])mounting_holes_2d(2, 2, hole_spacing, mounting_hole_diameter);
+        translate([hole_inset.x,hole_inset.y,0])mounting_holes_2d(2, 2, hole_spacing, hole_diameter);
     }
 
     translate([frame_x_offset,pcb_frame_offset,0])difference() {
@@ -160,7 +160,7 @@ module mounting_plates() {
             // Base Plate
             translate([0, front_inset, 0])
             linear_extrude(stock_thickness)
-            base_plate([keypad_width, overall_footprint.y - front_inset - back_inset]);
+            base_plate([overall_footprint.x, overall_footprint.y - front_inset - back_inset]);
     }
 }
 
@@ -168,7 +168,8 @@ module side_panel() {
     module slots2d() {
         offset(tab_tolerance)projection()intersection() {
             translate([0,0,-(overall_footprint.x + tab_depth + 1)])rotate([0,0,-90])rotate([0,-90,0])mounting_plates();
-            cube([overall_footprint.y, display_top_coords().z, 2]);
+            // FIXME
+            cube([overall_footprint.y + 30, display_top_coords().z + 20, 2]);
         }
     }
     
@@ -197,8 +198,8 @@ module side_panel() {
         slots2d();
     }
 }
-*color("Sienna"){
+color("Sienna"){
     side_panel();
-    translate([keypad_width+tab_depth,0,0])side_panel();
+    translate([overall_footprint.x+tab_depth,0,0])side_panel();
 }
 mounting_plates();
