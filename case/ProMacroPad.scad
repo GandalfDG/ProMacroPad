@@ -1,5 +1,5 @@
 // Thickness of the stock to laser cut
-stock_thickness = 2.3;
+stock_thickness = 3.1;
 
 keypad_plate_height = 20;
 display_plate_height = keypad_plate_height + 10;
@@ -7,7 +7,7 @@ display_angle = 20;
 display_back_distance = 135;
 
 tab_depth = stock_thickness;
-tab_tolerance = .2;
+tab_tolerance = 0.1;
 
 
 // keypad measurements
@@ -131,8 +131,25 @@ module display_plate() {
 }
 
 module base_plate(size) {
-    square(size);
-    tabs2d(size, 3, 40, 5);
+    module rpi_mounting_holes() {
+        diameter = 2.75;
+        spacing = [58-diameter, 23-diameter];
+        mounting_holes_2d(2, 2, spacing, diameter);
+    }
+    module perfboard_mounting_holes() {
+        diameter = 3.05;
+        spacing = [0, 34];
+        mounting_holes_2d(2, 1, spacing, diameter);
+    }
+    difference(){
+        union() {
+            square(size);
+            tabs2d(size, 3, 40, 5);
+        }
+        translate([10, overall_footprint.y - 40,0])rpi_mounting_holes();
+        translate([40, overall_footprint.y - 90,0])perfboard_mounting_holes();
+        translate([90, overall_footprint.y - 90,0])perfboard_mounting_holes();
+    }
 }
  
 module mounting_plates() {
