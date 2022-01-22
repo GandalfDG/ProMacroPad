@@ -7,7 +7,7 @@ display_angle = 20;
 display_back_distance = 135;
 
 tab_depth = stock_thickness;
-tab_tolerance = 0.1;
+tab_tolerance = 0.02;
 
 
 // keypad measurements
@@ -45,6 +45,10 @@ function display_top_coords() = [0,display_back_distance + cos(display_angle) * 
 // FIXME
 overall_footprint = [keypad_frame_dimensions.x, display_top_coords().y];
 
+// locations of electronic components on base plate
+pi_zero_location = [10, overall_footprint.y - 40];
+perfboard_1_location = [40, overall_footprint.y - 95];
+perfboard_2_location = [90, overall_footprint.y - 95];
 
 module mounting_holes_2d(rows, columns, spacing, diameter) {
     for(row=[0:rows-1], col=[0:columns-1]) {
@@ -146,9 +150,9 @@ module base_plate(size) {
             square(size);
             tabs2d(size, 3, 40, 5);
         }
-        translate([10, overall_footprint.y - 40,0])rpi_mounting_holes();
-        translate([40, overall_footprint.y - 90,0])perfboard_mounting_holes();
-        translate([90, overall_footprint.y - 90,0])perfboard_mounting_holes();
+        translate([pi_zero_location.x, pi_zero_location.y,0])rpi_mounting_holes();
+        translate([perfboard_1_location.x, perfboard_1_location.y,0])perfboard_mounting_holes();
+        translate([perfboard_2_location.x, perfboard_2_location.y,0])perfboard_mounting_holes();
     }
 }
  
@@ -197,11 +201,11 @@ module side_panel() {
         hard_point_2 = [display_top_coords().y + side_panel_offset, y];
 
         offset(3)polygon([
-        [- side_panel_offset, 0],
+        [- side_panel_offset, -side_panel_offset],
         [- side_panel_offset,keypad_plate_height + side_panel_offset],
         hard_point_1,
         hard_point_2, 
-        [overall_footprint.y+side_panel_offset,0]
+        [overall_footprint.y+side_panel_offset,-side_panel_offset]
         ]);
     }
     difference() {
@@ -226,5 +230,5 @@ module 3d_mockup() {
     }
 }
 
-*pieces_2d();
-3d_mockup();
+pieces_2d();
+*3d_mockup();
