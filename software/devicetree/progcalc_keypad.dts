@@ -10,9 +10,13 @@
                     compatible = "gpio-matrix-keypad";
                     debounce-delay-ms = <10>;
                     col-scan-delay-us = <10>;
+                    gpio-activelow; // this isn't documented in gpio-matrix-keypad.txt but it's in the code
                     /* 
-		       try to use GPIO only lines
-                       to keep SPI and I2C usable
+                    Orientation of adafruit neokey board requires current from
+                    row to column, which seems to be the opposite of what is the
+                    default for matrix_keypad driver, that being column output and
+                    row input. Rows need to be configured with pullups, and Cols
+                    need to be active low
                     */
                     row-gpios = <&gpio 4  0    // 1
                                  &gpio 5  0    // 2
