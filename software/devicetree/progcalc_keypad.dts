@@ -18,64 +18,57 @@
                     row input. Rows need to be configured with pullups, and Cols
                     need to be active low
                     */
-                    row-gpios = <&gpio 4  0    // 1
-                                 &gpio 5  0    // 2
-                                 &gpio 6  0    // 3
-                                 &gpio 7  0    // 4
-                                 &gpio 8  0>;  // 5
+                     row-gpios = <&gpio 4  0
+                                  &gpio 8  0
+                                  &gpio 7  0
+                                  &gpio 5  0
+                                  &gpio 6  0>;  // 5
 
-                    col-gpios = <&gpio 25 0    // 5
-                                 &gpio 24 0    // 6
-                                 &gpio 23 0    // 7
-                                 &gpio 22 0    // 8
-                                 &gpio 27 0
-                                 &gpio 17 0>;  // 9
+                    col-gpios = <&gpio 22  0
+                                 &gpio 27  0
+                                 &gpio 17  0
+                                 &gpio 24  0
+                                 &gpio 23  0
+                                 &gpio 18  0>;
                     /*
                       Keycodes from /usr/include/linux/input-event-codes.h
                       converted to hex using printf '%02x\n'
                     */
-
-                    linux,keymap = <
-                                    // col0 row0 KEY_LEFT
-                                    0x00000069
-                                    // col0 row1 KEY_KP0
-                                    0x01000052
-                                    // col0 row2 KEY_RIGHT
-                                    0x0200006a
-                                    // col0 row3 KEY_KPENTER
-                                    0x03000060
-				    // col1 row0 KEY_KP7
-                                    0x00010047
-                                    // col1 row1 KEY_KP8
-                                    0x01010048
-                                    // col1 row2 KEY_KP9
-                                    0x02010049
-                                    // col1 row3 KEY_ESC
-                                    0x03010001
-                                    // col2 row0 KEY_KP4
-                                    0x0002004b
-                                    // col2 row1 KEY_KP5
-                                    0x0102004c
-                                    // col2 row2 KEY_KP6
-                                    0x0202004d
-                                    // col2 row3 KEY_DOWN
-                                    0x0302006c
-                                    // col3 row0 KEY_KP1
-                                    0x0003004f
-                                    // col3 row1 KEY_KP2
-                                    0x01030050
-                                    // col3 row2 KEY_KP3
-                                    0x02030051
-                                    // col3 row3 KEY_UP
-                                    0x03030067
-                                    // col4 row0 KEY_F1
-                                    0x0004003b
-                                    // col4 row1 KEY_F2
-                                    0x0104003c
-                                    // col4 row2 KEY_KPSLASH there is no KP_#
-                                    0x02040062
-                                    // col4 row3 KEY_KPASTERISK
-                                    0x03040037>;
+                     linux,no-autorepeat;
+                    linux,keymap = <0x00000001
+                                    0x0001003B
+                                    0x0002003C
+                                    0x0003003D
+                                    0x0004003E
+                                    0x0005000E
+                                    
+                                    0x01000008
+                                    0x01010009
+                                    0x0102000A
+                                    0x0103001E
+                                    0x01040030
+                                    0x0105006F
+                                    
+                                    0x02000005
+                                    0x02010006
+                                    0x02020007
+                                    0x0203002E
+                                    0x02040020
+                                    0x02050071
+                                    
+                                    0x03000002
+                                    0x03010003
+                                    0x03020004
+                                    0x03030012
+                                    0x03040021
+                                    0x0305007D
+                                    
+                                    0x0400000B
+                                    0x0401001C
+                                    0x04020069
+                                    0x0403006C
+                                    0x04040067
+                                    0x0405006A>;
 
                  };
               };
