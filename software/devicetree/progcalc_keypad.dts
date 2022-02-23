@@ -1,0 +1,76 @@
+/dts-v1/;
+    /plugin/;
+    / {
+           compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+
+           fragment@0 {
+              target-path = "/";
+              __overlay__ {
+                 keypad: MATRIX4x5 {
+                    compatible = "gpio-matrix-keypad";
+                    debounce-delay-ms = <10>;
+                    col-scan-delay-us = <10>;
+                    gpio-activelow; // this isn't documented in gpio-matrix-keypad.txt but it's in the code
+                    /* 
+                    Orientation of adafruit neokey board requires current from
+                    row to column, which seems to be the opposite of what is the
+                    default for matrix_keypad driver, that being column output and
+                    row input. Rows need to be configured with pullups, and Cols
+                    need to be active low
+                    */
+                     row-gpios = <&gpio 4  0
+                                  &gpio 8  0
+                                  &gpio 7  0
+                                  &gpio 5  0
+                                  &gpio 6  0>;  // 5
+
+                    col-gpios = <&gpio 22  0
+                                 &gpio 27  0
+                                 &gpio 17  0
+                                 &gpio 24  0
+                                 &gpio 23  0
+                                 &gpio 18  0>;
+                    /*
+                      Keycodes from /usr/include/linux/input-event-codes.h
+                      converted to hex using printf '%02x\n'
+                    */
+                     linux,no-autorepeat;
+                    linux,keymap = <0x00000001
+                                    0x0001003B
+                                    0x0002003C
+                                    0x0003003D
+                                    0x0004003E
+                                    0x0005000E
+                                    
+                                    0x01000008
+                                    0x01010009
+                                    0x0102000A
+                                    0x0103001E
+                                    0x01040030
+                                    0x0105006F
+                                    
+                                    0x02000005
+                                    0x02010006
+                                    0x02020007
+                                    0x0203002E
+                                    0x02040020
+                                    0x02050071
+                                    
+                                    0x03000002
+                                    0x03010003
+                                    0x03020004
+                                    0x03030012
+                                    0x03040021
+                                    0x0305007D
+                                    
+                                    0x0400000B
+                                    0x0401001C
+                                    0x04020069
+                                    0x0403006C
+                                    0x04040067
+                                    0x0405006A>;
+
+                 };
+              };
+           };
+      };
