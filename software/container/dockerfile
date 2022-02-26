@@ -1,0 +1,13 @@
+FROM ubuntu:18.04
+
+RUN apt update -y && apt upgrade -y
+
+# from https://www.raspberrypi.com/documentation/computers/linux_kernel.html#install-required-dependencies-and-toolchain
+RUN apt install -y git bc bison flex libssl-dev make libc6-dev libncurses-dev crossbuild-essential-armhf
+
+WORKDIR /home/root
+RUN mkdir kernel; mkdir module_src; mkdir scripts
+# put scripts here for building modules and compiling the kernel
+COPY kernel_build.sh module_build.sh scripts/
+RUN chmod -R u+x scripts/
+ENV PATH "$PATH:/home/root/scripts"
