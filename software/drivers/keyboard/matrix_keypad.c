@@ -180,8 +180,8 @@ static void matrix_keypad_scan(struct work_struct *work)
 }
 
 static void matrix_keypad_pollable_scan(struct work_struct *work) {
-    struct matrix_keypad *keypad = container_of(work, struct matrix_keypad, work.work)
-    matrix_keypad_scan(work)
+    struct matrix_keypad *keypad = container_of(work, struct matrix_keypad, work.work);
+    matrix_keypad_scan(work);
     if (keypad->poll_enabled) {
         // queue this function again after a delay
         schedule_delayed_work(&keypad->work, msecs_to_jiffies(keypad->pdata->debounce_ms));
