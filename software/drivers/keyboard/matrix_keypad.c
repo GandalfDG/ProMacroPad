@@ -35,6 +35,9 @@ struct matrix_keypad {
 	bool scan_pending;
 	bool stopped;
 	bool gpio_all_disabled;
+
+    // when any key is held, poll to pick up additional keypresses in the same row
+    bool poll_enabled;
 };
 
 /*
@@ -138,8 +141,15 @@ static void matrix_keypad_scan(struct work_struct *work)
 		activate_col(pdata, col, false);
 	}
 
+    // assume no keys are pressed
+    keypad->poll_enabled = false;
+
 	for (col = 0; col < pdata->num_col_gpios; col++) {
 		uint32_t bits_changed;
+
+        // if any key is currently pressed we need to start polling
+        if (new_state[col])
+            keypad->poll_enabled = true;
 
 		bits_changed = keypad->last_key_state[col] ^ new_state[col];
 		if (bits_changed == 0)
@@ -167,6 +177,15 @@ static void matrix_keypad_scan(struct work_struct *work)
 	keypad->scan_pending = false;
 	enable_row_irqs(keypad);
 	spin_unlock_irq(&keypad->lock);
+}
+
+static void matrix_keypad_pollable_scan(struct work_struct *work) {
+    struct matrix_keypad *keypad = container_of(work, struct matrix_keypad, work.work)
+    matrix_keypad_scan(work)
+    if (keypad->poll_enabled) {
+        // queue this function again after a delay
+        schedule_delayed_work(&keypad->work, msecs_to_jiffies(keypad->pdata->debounce_ms));
+    }
 }
 
 static irqreturn_t matrix_keypad_interrupt(int irq, void *id)
@@ -505,7 +524,7 @@ static int matrix_keypad_probe(struct platform_device *pdev)
 	keypad->pdata = pdata;
 	keypad->row_shift = get_count_order(pdata->num_col_gpios);
 	keypad->stopped = true;
-	INIT_DELAYED_WORK(&keypad->work, matrix_keypad_scan);
+	INIT_DELAYED_WORK(&keypad->work, matrix_keypad_pollable_scan);
 	spin_lock_init(&keypad->lock);
 
 	input_dev->name		= pdev->name;
