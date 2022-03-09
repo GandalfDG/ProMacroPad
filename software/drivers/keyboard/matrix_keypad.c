@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
- *  GPIO driven matrix keyboard driver
+ *  GPIO driven matrix keyboard driver with updates to enable multiple
+ *  simultaneous keypresses in the same matrix row
+ *  Copyright (c) 2022 Jack Case <jackacase@gmail.com>
  *
- *  Copyright (c) 2008 Marek Vasut <marek.vasut@gmail.com>
- *
- *  Based on corgikbd.c
+ *  Based on matrix_keypad.c by Marek Vasut
  */
 
 #include <linux/types.h>
@@ -579,7 +579,7 @@ static struct platform_driver matrix_keypad_driver = {
 };
 module_platform_driver(matrix_keypad_driver);
 
-MODULE_AUTHOR("Marek Vasut <marek.vasut@gmail.com>");
-MODULE_DESCRIPTION("GPIO Driven Matrix Keypad Driver");
+MODULE_AUTHOR("Jack Case <jackacase@gmail.com>");
+MODULE_DESCRIPTION("GPIO Driven Matrix Keypad Driver With Polling");
 MODULE_LICENSE("GPL v2");
 MODULE_ALIAS("platform:matrix-keypad");
