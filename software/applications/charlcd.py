@@ -36,7 +36,7 @@ class CharLcd():
 
     def set_position(self, row, col):
         data = bytearray([col, row])
-        self._sys_file_write(data, CharLcd.POS_FILE, "w")
+        self._sys_file_write(data, CharLcd.POS_FILE, "wb")
 
     def write(self, data):
         with open(self.dev_path, "w") as devfile:
