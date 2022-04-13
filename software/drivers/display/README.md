@@ -1,3 +1,11 @@
+Attribution
+-----------
+The code of this kernel driver has been forked from https://github.com/lucidm/lcdi2c, and is
+licensed under the GPL V2 as indicated in the original module source code in the aforementioned
+repository.
+
+introduction
+------------
 Linux kernel module for alphanumeric LCDs on HD44780 and I2C expander attached. 
 Module supports LCDs with PCF8574 based expanders attached.
 
