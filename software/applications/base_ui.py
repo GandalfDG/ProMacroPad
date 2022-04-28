@@ -38,12 +38,14 @@ class TextField():
 
 class TextUI(ABC):
 
-    def __init__(self, display_device: typing.Any):
+    def __init__(self, display_device: typing.Any, rows=4, cols=20):
         """
         Initialize any state needed by the display device
         """
-        self.fields: typing.Dict[str, TextField] = {} 
-        self._sorted_fields: typing.list[TextField] = []
+        self.fields: typing.Dict[str, TextField] = {}
+        self._sorted_fields: typing.List[TextField] = []
+        self.device = display_device
+        self.dimensions = (rows, cols)
 
     def add_field(self, field_name: str, field: TextField):
         self.fields[field_name] = field
