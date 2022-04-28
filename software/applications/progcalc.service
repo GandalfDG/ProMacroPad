@@ -1,0 +1,8 @@
+[unit]
+Description=ProgrammerCalculator
+After=systemd-modules-load.service
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/lcdapps/progcalc.py
+KillSignal=SIGINT
+[Install]
+WantedBy=multi-user.target
