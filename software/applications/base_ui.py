@@ -38,18 +38,23 @@ class TextField():
 
 class TextUI(ABC):
 
-    @abstractmethod
     def __init__(self, display_device: typing.Any):
         """
         Initialize any state needed by the display device
         """
         self.fields: typing.Dict[str, TextField] = {} 
+        self._sorted_fields: typing.list[TextField] = []
 
     def add_field(self, field_name: str, field: TextField):
         self.fields[field_name] = field
+        self._sorted_fields = sorted(self.fields.values())
+
+    def redraw(self):
+        for field in self._sorted_fields:
+            self.draw_field(field)
 
     @abstractmethod
-    def draw_field(self, field_name: str):
+    def draw_field(self, field: TextField):
         pass
         
 

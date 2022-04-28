@@ -37,12 +37,10 @@ class LcdUI(TextUI):
         self.lcd = lcd_device
         self.lcd.reset()
 
-    def add_field(self, field_name: str, field: TextField):
-        self.fields[field_name] = field
-
-    def draw(self):
-        for field in sorted(self.fields.values()):
-            field.draw()
+    def draw_field(self, field: TextField):
+        for row in range(field.rows):
+            self.lcd.set_position(field.coords[0] + row, field.coords[1])
+            self.lcd.write(field.padded_text[field.length * row:(field.length * row) + field.length])
 
 
 if __name__ == "__main__":
