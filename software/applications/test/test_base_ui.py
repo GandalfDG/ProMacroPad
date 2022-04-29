@@ -24,6 +24,23 @@ class TestTextField(unittest.TestCase):
         self.assertEqual(field.padded_text, self.test_str +
                          ' ' * (field_len - len(self.test_str)))
 
+    def test_truncate(self):
+        field = TextField((0,0), self.test_str, 3)
 
-if __name__ == "__main__":
-    unittest.main()
+        self.assertEqual(field.padded_text, self.test_str[:3])
+
+    def test_multiline(self):
+        field_cols = 10
+        field_rows = 2
+        field = TextField((0,0), self.test_str, field_cols, field_rows)
+
+        field.set_text("*" * (field.cols * field.rows - 5))
+
+        self.assertEqual(len(field.wrapped_text), field.rows)
+        self.assertEqual(field.wrapped_text[1], "*" * (field_cols - 5) + ' ' * (field_cols - (field_cols - 5)))
+
+class TestScrollableTextField(unittest.TestCase):
+
+    def setUp(self) -> None:
+        return super().setUp()
+

@@ -7,12 +7,14 @@ from abc import ABC, abstractmethod
 
 CoordType = typing.Tuple[int, int]
 
+
 class TextField():
     """
     A TextField object represents a rectangular area of a display which may contain text.
     The text field maintains the text content, as well as the location and dimensions of
     the area.
     """
+
     def __init__(self, coords: CoordType, text="", cols=None, rows=None):
         self.coords: CoordType = coords
         self.cols: int = cols if cols else len(text)
@@ -33,7 +35,8 @@ class TextField():
         Set the text contained by the field. The text will be truncated to fit the field's length.
         TODO for multi-row fields handle wrapping
         """
-        truncated = text[:self.cols * self.rows]  # truncate to the length of the field
+        truncated = text[:self.cols *
+                         self.rows]  # truncate to the length of the field
         self.text = truncated
         # pad with spaces to field length
         padded = truncated + (" " * ((self.cols * self.rows) - len(truncated)))
@@ -43,6 +46,19 @@ class TextField():
         for row in range(self.rows):
             self.wrapped_text.append(
                 self.padded_text[self.cols * row:(self.cols * row) + self.cols])
+
+
+class ScrollableTextField(TextField):
+    """
+    TODO
+    A text field which may contain more than rows*cols characters, allowing
+    vertical scrolling
+    """
+    def __init__(self, coords: CoordType, text="", cols=None, rows=None):
+        super().__init__(coords, text, cols, rows)
+
+    def set_text(self, text: str):
+        return super().set_text(text)
 
 
 class TextUI(ABC):
@@ -67,9 +83,3 @@ class TextUI(ABC):
     @abstractmethod
     def draw_field(self, field: TextField):
         pass
-        
-
-
-
-
-    

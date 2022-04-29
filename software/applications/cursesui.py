@@ -18,7 +18,8 @@ class CursesUI(TextUI):
         self.window.refresh()
 
     def draw_field(self, field: TextField):
-        self.window.addnstr(field.coords[0], field.coords[1], field.padded_text, field.cols + 1)
+        for row, line in enumerate(field.wrapped_text):
+            self.window.addnstr(field.coords[0] + row, field.coords[1], line, field.cols)
 
 def main(scr):
 
@@ -26,6 +27,7 @@ def main(scr):
     curses.curs_set(0)
     ui.add_field("asdf", TextField((3, 2), "hello", 8, 1))
     ui.add_field("123", TextField((0, 0), "1"))
+    ui.add_field("multiline", TextField((1,1), "two line", 4, 2))
 
     while True:
         ui.fields["123"].set_text(str(random.randint(1, 10)))
