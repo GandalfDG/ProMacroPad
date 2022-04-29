@@ -234,3 +234,4 @@ modules.order
 Module.symvers
 Mkfile.old
 
+workspace.code-workspace

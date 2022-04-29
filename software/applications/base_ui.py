@@ -18,8 +18,9 @@ class TextField():
         self.cols: int = cols if cols else len(text)
         self.rows: int = rows if rows else 1
         self.text: str = text
-        self.padded_text: str = text
-        self.wrapped_text: typing.List[str] = [text]
+        self.padded_text: str = ""
+        self.wrapped_text: typing.List[str] = []
+        self.set_text(self.text)
 
     def __lt__(self, other):
         if self.coords[0] == other.coords[0]:
