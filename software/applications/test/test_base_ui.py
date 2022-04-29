@@ -1,5 +1,5 @@
 import unittest
-from ..base_ui import TextField
+from ..base_ui import ScrollableTextField, TextField
 
 
 class TestTextField(unittest.TestCase):
@@ -43,4 +43,9 @@ class TestScrollableTextField(unittest.TestCase):
 
     def setUp(self) -> None:
         return super().setUp()
+
+    def test_wrapping(self):
+        field = ScrollableTextField((0,0), "123456", 3, 1)
+
+        self.assertEqual(len(field.wrapped_text), 2)
 

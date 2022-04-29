@@ -56,9 +56,12 @@ class ScrollableTextField(TextField):
     """
     def __init__(self, coords: CoordType, text="", cols=None, rows=None):
         super().__init__(coords, text, cols, rows)
+        self.top_row = 0
 
     def set_text(self, text: str):
-        return super().set_text(text)
+        self.text = text
+        self.wrapped_text = [self.text[i*self.cols:i*self.cols+self.cols] for i in range(int(len(self.text)/self.cols))]
+
 
 
 class TextUI(ABC):
