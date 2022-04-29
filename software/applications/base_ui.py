@@ -14,11 +14,12 @@ class TextField():
     the area.
     """
     def __init__(self, coords: CoordType, text="", cols=None, rows=None):
-        self.coords = coords
-        self.cols = cols if cols else len(text)
-        self.rows = rows if rows else 1
-        self.text = text
-        self.padded_text = text
+        self.coords: CoordType = coords
+        self.cols: int = cols if cols else len(text)
+        self.rows: int = rows if rows else 1
+        self.text: str = text
+        self.padded_text: str = text
+        self.wrapped_text: typing.List[str] = [text]
 
     def __lt__(self, other):
         if self.coords[0] == other.coords[0]:
@@ -29,12 +30,19 @@ class TextField():
     def set_text(self, text: str):
         """
         Set the text contained by the field. The text will be truncated to fit the field's length.
+        TODO for multi-row fields handle wrapping
         """
         truncated = text[:self.cols * self.rows]  # truncate to the length of the field
         self.text = truncated
         # pad with spaces to field length
         padded = truncated + (" " * ((self.cols * self.rows) - len(truncated)))
         self.padded_text = padded
+
+        self.wrapped_text = []
+        for row in range(self.rows):
+            self.wrapped_text.append(
+                self.padded_text[self.cols * row:(self.cols * row) + self.cols])
+
 
 class TextUI(ABC):
 
