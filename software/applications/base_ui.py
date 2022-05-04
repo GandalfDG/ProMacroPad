@@ -55,12 +55,21 @@ class ScrollableTextField(TextField):
     vertical scrolling
     """
     def __init__(self, coords: CoordType, text="", cols=None, rows=None):
-        super().__init__(coords, text, cols, rows)
         self.top_row = 0
+        self.full_lines = [1,2]
+        super().__init__(coords, text, cols, rows)
 
     def set_text(self, text: str):
         self.text = text
-        self.wrapped_text = [self.text[i*self.cols:i*self.cols+self.cols] for i in range(int(len(self.text)/self.cols))]
+        self.full_lines = [self.text[i*self.cols:i*self.cols+self.cols] for i in range(int(len(self.text)/self.cols))]
+        self.wrapped_text = self.full_lines[self.top_row:self.top_row+self.rows]
+
+    def scroll_to(self, row):
+        max_scroll = len(self.full_lines) - self.rows
+        if row > max_scroll or row < 0:
+            raise ValueError(f"scrolled too far, max scroll row = {max_scroll}")
+        self.top_row = row
+        self.set_text(self.text)
 
 
 

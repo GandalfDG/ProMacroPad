@@ -42,10 +42,20 @@ class TestTextField(unittest.TestCase):
 class TestScrollableTextField(unittest.TestCase):
 
     def setUp(self) -> None:
+        self.field1 = ScrollableTextField((0,0), "123456", 3, 1)
+        self.field2 = ScrollableTextField((0,0), "123456789", 3, 2)
         return super().setUp()
 
     def test_wrapping(self):
-        field = ScrollableTextField((0,0), "123456", 3, 1)
+        self.assertEqual(len(self.field1.full_lines), 2)
+        self.assertEqual(len(self.field1.wrapped_text), 1)
 
-        self.assertEqual(len(field.wrapped_text), 2)
+        self.assertEqual(len(self.field2.full_lines), 3)
+        self.assertEqual(len(self.field2.wrapped_text), 2)
 
+    def test_scrolling(self):
+        self.field1.scroll_to(1)
+        self.assertEqual("456", self.field1.wrapped_text[0])
+        self.assertRaises(ValueError, self.field1.scroll_to, 10)
+        self.assertRaises(ValueError, self.field1.scroll_to, 2)
+        self.assertRaises(ValueError, self.field1.scroll_to, -1)
