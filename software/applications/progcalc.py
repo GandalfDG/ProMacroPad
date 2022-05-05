@@ -2,7 +2,7 @@ import typing
 import evdev
 from math import ceil
 
-from base_ui import TextUI, TextField, ScrollableTextField
+from base_ui import TextDevice, TextUI, TextField, ScrollableTextField
 import charlcd
 
 
@@ -43,8 +43,8 @@ class ProgCalcController():
 
     formats = ["DEC", "HEX", "BIN"]
 
-    def __init__(self, lcd: charlcd.CharLcd, input_device: evdev.InputDevice):
-        self.lcd = lcd
+    def __init__(self, device: TextDevice, input_device: evdev.InputDevice):
+        self.lcd = device
         self.ui = CalcUI(self.lcd)
         self.input_device = input_device
         self.from_idx = 0
@@ -147,6 +147,7 @@ class ProgCalcController():
 
 if __name__ == "__main__":
     try:
+        device = 
         lcd = charlcd.CharLcd("/sys/class/alphalcd/lcdi2c", "/dev/lcdi2c")
         ctrl = ProgCalcController(lcd, evdev.InputDevice("/dev/input/event0"))
         ctrl.handle_input()

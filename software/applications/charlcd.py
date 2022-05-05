@@ -3,7 +3,6 @@ import os
 
 from base_ui import TextDevice
 
-
 class CharLcd(TextDevice):
 
     RESET_FILE = "reset"

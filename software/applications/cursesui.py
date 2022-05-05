@@ -1,7 +1,17 @@
 import curses
 
-from base_ui import TextField, TextUI
+from base_ui import TextDevice, TextField, TextUI
+import progcalc
 
+class CursesDevice(TextDevice):
+    def __init__(self):
+        super().__init__()
+
+    def setup(self):
+        return super().setup()
+
+    def teardown(self):
+        return super().teardown()
 
 class CursesUI(TextUI):
     def __init__(self, display_device, rows, cols):
@@ -24,16 +34,9 @@ class CursesUI(TextUI):
 
 def main(scr):
 
-    ui = CursesUI(None, 4, 20)
-    curses.curs_set(0)
-    ui.add_field("asdf", TextField((3, 2), "hello", 8, 1))
-    ui.add_field("123", TextField((0, 0), "1"))
-    ui.add_field("multiline", TextField((1,1), "two line", 4, 2))
-
-    while True:
-        ui.fields["123"].set_text(str(random.randint(1, 10)))
-        ui.redraw()
-        pass
+    progcalc.CalcUI(CursesUI(None, 4, 20))
+    ctrl = progcalc.ProgCalcController(lcd, evdev.InputDevice("/dev/input/event0"))
+    ctrl.handle_input()
 
 
 if __name__ == "__main__":
