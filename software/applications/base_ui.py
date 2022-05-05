@@ -15,7 +15,7 @@ class TextField():
     the area.
     """
 
-    def __init__(self, coords: CoordType, text="", cols=None, rows=None):
+    def __init__(self, coords: CoordType, text:str="", cols:int=None, rows:int=None):
         self.coords: CoordType = coords
         self.cols: int = cols if cols else len(text)
         self.rows: int = rows if rows else 1
@@ -71,18 +71,31 @@ class ScrollableTextField(TextField):
         self.set_text(self.raw_text)
 
     @property
-    def max_scroll(self):
+    def max_scroll(self) -> int:
         return len(self.full_lines) - self.rows
 
     @property
-    def scrolled_percentage(self):
+    def scrolled_percentage(self) -> float:
         return self.top_row / self.max_scroll
 
 
+class TextDevice(ABC):
+    
+    @abstractmethod
+    def __init__(self):
+        pass
+
+    @abstractmethod
+    def setup(self):
+        pass
+
+    @abstractmethod
+    def teardown(self):
+        pass
 
 class TextUI(ABC):
 
-    def __init__(self, display_device: typing.Any, rows=4, cols=20):
+    def __init__(self, display_device: TextDevice, rows:int=4, cols:int=20):
         """
         Initialize any state needed by the display device
         """
@@ -90,6 +103,13 @@ class TextUI(ABC):
         self._sorted_fields: typing.List[TextField] = []
         self.device = display_device
         self.dimensions = (rows, cols)
+
+
+    def setup(self):
+        self.device.setup()
+
+    def teardown(self):
+        self.device.teardown()
 
     def add_field(self, field_name: str, field: TextField):
         self.fields[field_name] = field
@@ -102,3 +122,4 @@ class TextUI(ABC):
     @abstractmethod
     def draw_field(self, field: TextField):
         pass
+

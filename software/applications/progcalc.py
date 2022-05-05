@@ -2,35 +2,28 @@ import typing
 import evdev
 from math import ceil
 
-import lcdui
+from base_ui import TextUI, TextField, ScrollableTextField
 import charlcd
 
 
-class CalcUI(lcdui.LcdUI):
+class CalcUI(TextUI):
 
-    def __init__(self, lcd: charlcd.CharLcd):
-        super().__init__(lcd)
+    def __init__(self, device: typing.Any):
+        super().__init__(device)
 
         self.active_field = "entry_field"
 
-        self.fields["entry_field"] = lcdui.TextField(
-            (0, 0), self.lcd, length=20)
-        self.fields["result_field"] = lcdui.TextField(
-            (1, 0), self.lcd, length=20, rows=2, text=ProgCalcController.error_string)
-        # self.fields["from_label"] = lcdui.TextField(
-        #     (2, 0), self.lcd, text="from:")
-        # self.fields["to_label"] = lcdui.TextField(
-        #     (2, self.fields["from_label"].last_col + 2), self.lcd, text="to:")
-        self.fields["from_field"] = lcdui.TextField(
-            (3, 0), self.lcd, text="DEC")
-        self.fields["to_field"] = lcdui.TextField(
-            (3, 6), self.lcd, text="HEX")
-        self.fields["arrow_field"] = lcdui.TextField(
-            (3, 4), self.lcd, text="\x7e")
+        self.fields["entry_field"] = TextField(
+            (0, 0), cols=20)
+        self.fields["result_field"] = ScrollableTextField(
+            (1, 0), cols=20, rows=2, text=ProgCalcController.error_string)
+        self.fields["from_field"] = TextField(
+            (3, 0), text="DEC")
+        self.fields["to_field"] = TextField(
+            (3, 6), text="HEX")
+        self.fields["arrow_field"] = TextField(
+            (3, 4), text="\x7e")
 
-        self.lcd.set_backlight(True)
-        self.lcd.set_cursor(False)
-        self.lcd.set_blink(False)
         self.draw()
         self.lcd.set_position(*self.fields[self.active_field].coords)
 
@@ -158,5 +151,4 @@ if __name__ == "__main__":
         ctrl = ProgCalcController(lcd, evdev.InputDevice("/dev/input/event0"))
         ctrl.handle_input()
     except:
-        lcd.set_backlight(False)
-        lcd.clear()
+        ctrl.ui.teardown()
