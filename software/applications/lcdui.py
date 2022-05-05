@@ -38,9 +38,9 @@ class LcdUI(TextUI):
         self.lcd.reset()
 
     def draw_field(self, field: TextField):
-        for row in range(field.rows):
+        for row, line in enumerate(field.windowed_text)
             self.lcd.set_position(field.coords[0] + row, field.coords[1])
-            self.lcd.write(field.padded_text[field.length * row:(field.length * row) + field.length])
+            self.lcd.write(line)
 
 
 if __name__ == "__main__":

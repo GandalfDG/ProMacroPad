@@ -8,6 +8,7 @@ class CursesUI(TextUI):
         super().__init__(display_device, rows, cols)
         
         self.window = curses.newwin(rows, cols, 1, 1)
+        self.window.border()
 
     def add_field(self, field_name, field):
         super().add_field(field_name, field)
@@ -18,7 +19,7 @@ class CursesUI(TextUI):
         self.window.refresh()
 
     def draw_field(self, field: TextField):
-        for row, line in enumerate(field.wrapped_text):
+        for row, line in enumerate(field.windowed_text):
             self.window.addnstr(field.coords[0] + row, field.coords[1], line, field.cols)
 
 def main(scr):

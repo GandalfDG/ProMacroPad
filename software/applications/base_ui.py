@@ -19,10 +19,10 @@ class TextField():
         self.coords: CoordType = coords
         self.cols: int = cols if cols else len(text)
         self.rows: int = rows if rows else 1
-        self.text: str = text
+        self.raw_text: str = text
         self.padded_text: str = ""
-        self.wrapped_text: typing.List[str] = []
-        self.set_text(self.text)
+        self.windowed_text: typing.List[str] = []
+        self.set_text(self.raw_text)
 
     def __lt__(self, other):
         if self.coords[0] == other.coords[0]:
@@ -37,14 +37,14 @@ class TextField():
         """
         truncated = text[:self.cols *
                          self.rows]  # truncate to the length of the field
-        self.text = truncated
+        self.raw_text = truncated
         # pad with spaces to field length
         padded = truncated + (" " * ((self.cols * self.rows) - len(truncated)))
         self.padded_text = padded
 
-        self.wrapped_text = []
+        self.windowed_text = []
         for row in range(self.rows):
-            self.wrapped_text.append(
+            self.windowed_text.append(
                 self.padded_text[self.cols * row:(self.cols * row) + self.cols])
 
 
@@ -60,16 +60,23 @@ class ScrollableTextField(TextField):
         super().__init__(coords, text, cols, rows)
 
     def set_text(self, text: str):
-        self.text = text
-        self.full_lines = [self.text[i*self.cols:i*self.cols+self.cols] for i in range(int(len(self.text)/self.cols))]
-        self.wrapped_text = self.full_lines[self.top_row:self.top_row+self.rows]
+        self.raw_text = text
+        self.full_lines = [self.raw_text[i*self.cols:i*self.cols+self.cols] for i in range(int(len(self.raw_text)/self.cols))]
+        self.windowed_text = self.full_lines[self.top_row:self.top_row+self.rows]
 
     def scroll_to(self, row):
-        max_scroll = len(self.full_lines) - self.rows
-        if row > max_scroll or row < 0:
-            raise ValueError(f"scrolled too far, max scroll row = {max_scroll}")
+        if row > self.max_scroll or row < 0:
+            raise ValueError(f"scrolled too far, max scroll row = {self.max_scroll}")
         self.top_row = row
-        self.set_text(self.text)
+        self.set_text(self.raw_text)
+
+    @property
+    def max_scroll(self):
+        return len(self.full_lines) - self.rows
+
+    @property
+    def scrolled_percentage(self):
+        return self.top_row / self.max_scroll
 
 
 

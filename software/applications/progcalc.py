@@ -112,7 +112,7 @@ class ProgCalcController():
 
     def do_conversion(self):
         # get the current contents of the entry field
-        from_val = self.ui.fields["entry_field"].text
+        from_val = self.ui.fields["entry_field"].raw_text
         intermediate = None
         result = None
         # look at from_type and to_type
