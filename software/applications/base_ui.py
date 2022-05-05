@@ -15,7 +15,7 @@ class TextField():
     the area.
     """
 
-    def __init__(self, coords: CoordType, text:str="", cols:int=None, rows:int=None):
+    def __init__(self, coords: CoordType, text: str = "", cols: int = None, rows: int = None):
         self.coords: CoordType = coords
         self.cols: int = cols if cols else len(text)
         self.rows: int = rows if rows else 1
@@ -54,19 +54,22 @@ class ScrollableTextField(TextField):
     A text field which may contain more than rows*cols characters, allowing
     vertical scrolling
     """
+
     def __init__(self, coords: CoordType, text="", cols=None, rows=None):
         self.top_row = 0
-        self.full_lines = [1,2]
+        self.full_lines = [1, 2]
         super().__init__(coords, text, cols, rows)
 
     def set_text(self, text: str):
         self.raw_text = text
-        self.full_lines = [self.raw_text[i*self.cols:i*self.cols+self.cols] for i in range(int(len(self.raw_text)/self.cols))]
+        self.full_lines = [self.raw_text[i*self.cols:i*self.cols+self.cols]
+                           for i in range(int(len(self.raw_text)/self.cols))]
         self.windowed_text = self.full_lines[self.top_row:self.top_row+self.rows]
 
     def scroll_to(self, row):
         if row > self.max_scroll or row < 0:
-            raise ValueError(f"scrolled too far, max scroll row = {self.max_scroll}")
+            raise ValueError(
+                f"scrolled too far, max scroll row = {self.max_scroll}")
         self.top_row = row
         self.set_text(self.raw_text)
 
@@ -80,9 +83,14 @@ class ScrollableTextField(TextField):
 
 
 class TextDevice(ABC):
-    
+    """
+    any text device should be able to do at least a subset of what CharLcd does
+    e.g. clear, set cursor position, write data, etc.
+    """
     @abstractmethod
-    def __init__(self):
+    def __init__(self, rows, cols):
+        self.rows = rows
+        self.cols = cols
         pass
 
     @abstractmethod
@@ -93,17 +101,29 @@ class TextDevice(ABC):
     def teardown(self):
         pass
 
+    @abstractmethod
+    def clear(self):
+        pass
+
+    @abstractmethod
+    def set_position(self, row: int, col: int):
+        pass
+
+    @abstractmethod
+    def write(self, data: str):
+        pass
+
+
 class TextUI(ABC):
 
-    def __init__(self, display_device: TextDevice, rows:int=4, cols:int=20):
+    def __init__(self, display_device: TextDevice):
         """
         Initialize any state needed by the display device
         """
         self.fields: typing.Dict[str, TextField] = {}
         self._sorted_fields: typing.List[TextField] = []
         self.device = display_device
-        self.dimensions = (rows, cols)
-
+        self.device.setup()
 
     def setup(self):
         self.device.setup()
@@ -122,4 +142,3 @@ class TextUI(ABC):
     @abstractmethod
     def draw_field(self, field: TextField):
         pass
-

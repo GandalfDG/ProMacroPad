@@ -3,26 +3,23 @@ import curses
 from base_ui import TextDevice, TextField, TextUI
 import progcalc
 
+
 class CursesDevice(TextDevice):
-    def __init__(self):
-        super().__init__()
+
 
     def setup(self):
+        main_window = curses.newwin(self.rows + 2, self.cols + 2, 0, 0)
+        main_window.border()
+        self.window = curses.newwin(self.rows, self.cols, 1, 1)
         return super().setup()
 
     def teardown(self):
         return super().teardown()
 
+
 class CursesUI(TextUI):
-    def __init__(self, display_device, rows, cols):
-        super().__init__(display_device, rows, cols)
-        
-        self.window = curses.newwin(rows, cols, 1, 1)
-        self.window.border()
-
-    def add_field(self, field_name, field):
-        super().add_field(field_name, field)
-
+    def __init__(self, display_device):
+        super().__init__(display_device)
 
     def redraw(self):
         super().redraw()
@@ -30,16 +27,18 @@ class CursesUI(TextUI):
 
     def draw_field(self, field: TextField):
         for row, line in enumerate(field.windowed_text):
-            self.window.addnstr(field.coords[0] + row, field.coords[1], line, field.cols)
+            self.window.addnstr(
+                field.coords[0] + row, field.coords[1], line, field.cols)
+
 
 def main(scr):
-
-    progcalc.CalcUI(CursesUI(None, 4, 20))
-    ctrl = progcalc.ProgCalcController(lcd, evdev.InputDevice("/dev/input/event0"))
+    dev = CursesDevice(4, 20)
+    progcalc.CalcUI(CursesUI(dev, 4, 20))
+    ctrl = progcalc.ProgCalcController(
+        lcd, evdev.InputDevice("/dev/input/event0"))
     ctrl.handle_input()
 
 
 if __name__ == "__main__":
     import random
     curses.wrapper(main)
-    
