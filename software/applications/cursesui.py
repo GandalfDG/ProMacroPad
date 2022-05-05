@@ -1,4 +1,5 @@
 import curses
+import evdev
 
 from base_ui import TextDevice, TextField, TextUI
 import progcalc
@@ -33,9 +34,9 @@ class CursesUI(TextUI):
 
 def main(scr):
     dev = CursesDevice(4, 20)
-    progcalc.CalcUI(CursesUI(dev, 4, 20))
+    progcalc.CalcUI()
     ctrl = progcalc.ProgCalcController(
-        lcd, evdev.InputDevice("/dev/input/event0"))
+        dev, evdev.InputDevice("/dev/input/event0"))
     ctrl.handle_input()
 
 

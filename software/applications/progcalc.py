@@ -13,8 +13,7 @@ import charlcd
 
 class CalcUI(TextUI):
 
-    def __init__(self, device: typing.Any):
-        super().__init__(device)
+    def __init__(self):
 
         self.active_field = "entry_field"
 
@@ -152,7 +151,6 @@ class ProgCalcController():
 
 if __name__ == "__main__":
     try:
-        device = 
         lcd = charlcd.CharLcd("/sys/class/alphalcd/lcdi2c", "/dev/lcdi2c")
         ctrl = ProgCalcController(lcd, evdev.InputDevice("/dev/input/event0"))
         ctrl.handle_input()
