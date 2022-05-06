@@ -28,23 +28,8 @@ class CursesDevice(TextDevice):
         return super().write(data)
 
 
-class CursesUI(TextUI):
-    def __init__(self, display_device):
-        super().__init__(display_device)
-
-    def redraw(self):
-        super().redraw()
-        self.window.refresh()
-
-    def draw_field(self, field: TextField):
-        for row, line in enumerate(field.windowed_text):
-            self.window.addnstr(
-                field.coords[0] + row, field.coords[1], line, field.cols)
-
-
 def main(scr):
     dev = CursesDevice(4, 20)
-    progcalc.CalcUI()
     ctrl = progcalc.ProgCalcController(
         dev, evdev.InputDevice("/dev/input/event0"))
     ctrl.handle_input()

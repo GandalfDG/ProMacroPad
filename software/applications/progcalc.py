@@ -11,7 +11,7 @@ from base_ui import TextDevice, TextUI, TextField, ScrollableTextField
 import charlcd
 
 
-class CalcUI(TextUI):
+class CalcUI():
 
     def __init__(self, device: TextDevice):
         super().__init__(device)
@@ -48,9 +48,9 @@ class ProgCalcController():
 
     formats = ["DEC", "HEX", "BIN"]
 
-    def __init__(self, device: TextDevice, input_device: evdev.InputDevice):
-        self.lcd = device
-        self.ui = CalcUI(self.lcd)
+    def __init__(self, display_device: TextDevice, input_device: evdev.InputDevice):
+        self.display = display_device
+        self.ui = CalcUI(self.display)
         self.input_device = input_device
         self.from_idx = 0
         self.to_idx = 1
@@ -86,7 +86,6 @@ class ProgCalcController():
                     self.from_idx = self.to_idx
                     self.to_idx = temp
                     self.update_to_from()
-
 
                 elif event.keycode == 'KEY_F3':
                     # cycle through to formats
@@ -137,7 +136,8 @@ class ProgCalcController():
                 num_zeros = (num_nibbles * 4) - len(raw_binary)
                 # zero pad to nearest nibble
                 padded_binary = "0" * num_zeros + raw_binary
-                nibbles = [padded_binary[i:i+4] for i in range(0, len(padded_binary) , 4)]
+                nibbles = [padded_binary[i:i+4]
+                           for i in range(0, len(padded_binary), 4)]
                 result = " ".join(nibbles)
 
         # catch exceptions and set result field to some error message, maybe just "?"

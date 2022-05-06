@@ -87,7 +87,6 @@ class TextDevice(ABC):
     any text device should be able to do at least a subset of what CharLcd does
     e.g. clear, set cursor position, write data, etc.
     """
-    @abstractmethod
     def __init__(self, rows, cols):
         self.rows = rows
         self.cols = cols
@@ -114,7 +113,11 @@ class TextDevice(ABC):
         pass
 
 
-class TextUI(ABC):
+class TextUI():
+    """
+    TextUI is a layer on top of a TextDevice to maintain a set of fields and
+    to control drawing them
+    """
 
     def __init__(self, display_device: TextDevice):
         """
@@ -123,7 +126,6 @@ class TextUI(ABC):
         self.fields: typing.Dict[str, TextField] = {}
         self._sorted_fields: typing.List[TextField] = []
         self.device = display_device
-        self.device.setup()
 
     def setup(self):
         self.device.setup()
