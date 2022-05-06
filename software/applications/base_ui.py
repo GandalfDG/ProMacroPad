@@ -139,6 +139,8 @@ class TextUI(ABC):
         for field in self._sorted_fields:
             self.draw_field(field)
 
-    @abstractmethod
     def draw_field(self, field: TextField):
-        pass
+        for idx, line in enumerate(field.windowed_text):
+            self.device.set_position(field.coords[0] + idx, field.coords[1])
+            self.device.write(line)
+

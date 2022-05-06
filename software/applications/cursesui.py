@@ -1,5 +1,6 @@
 import curses
 import evdev
+from os import device_encoding
 
 from base_ui import TextDevice, TextField, TextUI
 import progcalc
@@ -15,7 +16,16 @@ class CursesDevice(TextDevice):
         return super().setup()
 
     def teardown(self):
-        return super().teardown()
+        pass
+
+    def clear(self):
+        return super().clear()
+
+    def set_position(self, row: int, col: int):
+        return super().set_position(row, col)
+
+    def write(self, data: str):
+        return super().write(data)
 
 
 class CursesUI(TextUI):

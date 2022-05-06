@@ -13,7 +13,8 @@ import charlcd
 
 class CalcUI(TextUI):
 
-    def __init__(self):
+    def __init__(self, device: TextDevice):
+        super().__init__(device)
 
         self.active_field = "entry_field"
 
@@ -28,12 +29,12 @@ class CalcUI(TextUI):
         self.fields["arrow_field"] = TextField(
             (3, 4), text="\x7e")
 
-        self.draw()
-        self.lcd.set_position(*self.fields[self.active_field].coords)
+        self.redraw()
+        self.device.set_position(*self.fields[self.active_field].coords)
 
     def select_field(self, field_name):
         self.active_field = field_name
-        self.lcd.set_position(*self.fields[self.active_field].coords)
+        self.device.set_position(*self.fields[self.active_field].coords)
 
 
 class ProgCalcController():
