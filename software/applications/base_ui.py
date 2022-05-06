@@ -93,6 +93,19 @@ class TextDevice(ABC):
     def teardown(self):
         pass
 
+    @abstractmethod
+    def clear(self):
+        pass
+
+    @abstractmethod
+    def set_position(self, row:int, col:int):
+        pass
+
+    @abstractmethod
+    def write(self, data:str):
+        pass
+    
+
 class TextUI(ABC):
 
     def __init__(self, display_device: TextDevice, rows:int=4, cols:int=20):
@@ -119,7 +132,8 @@ class TextUI(ABC):
         for field in self._sorted_fields:
             self.draw_field(field)
 
-    @abstractmethod
     def draw_field(self, field: TextField):
-        pass
+        for idx, line in enumerate(field.windowed_text):
+            self.device.set_position(field.coords[0] + idx, field.coords[1])
+            self.device.write(line)
 

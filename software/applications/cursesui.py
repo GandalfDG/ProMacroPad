@@ -1,4 +1,5 @@
 import curses
+from os import device_encoding
 
 from base_ui import TextDevice, TextField, TextUI
 import progcalc
@@ -8,10 +9,19 @@ class CursesDevice(TextDevice):
         super().__init__()
 
     def setup(self):
-        return super().setup()
+        pass
 
     def teardown(self):
-        return super().teardown()
+        pass
+
+    def clear(self):
+        return super().clear()
+
+    def set_position(self, row: int, col: int):
+        return super().set_position(row, col)
+
+    def write(self, data: str):
+        return super().write(data)
 
 class CursesUI(TextUI):
     def __init__(self, display_device, rows, cols):
@@ -33,10 +43,8 @@ class CursesUI(TextUI):
             self.window.addnstr(field.coords[0] + row, field.coords[1], line, field.cols)
 
 def main(scr):
-
-    progcalc.CalcUI(CursesUI(None, 4, 20))
-    ctrl = progcalc.ProgCalcController(lcd, evdev.InputDevice("/dev/input/event0"))
-    ctrl.handle_input()
+    device = CursesDevice()
+    progcalc.CalcUI(device)
 
 
 if __name__ == "__main__":
