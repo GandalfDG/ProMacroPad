@@ -7,13 +7,13 @@ import typing
 import evdev
 from math import ceil
 
-from base_ui import TextDevice, TextUI, TextField, ScrollableTextField
+from base_ui import TextDisplay, TextUI, TextField, ScrollableTextField
 import charlcd
 
 
 class CalcUI():
 
-    def __init__(self, device: TextDevice):
+    def __init__(self, device: TextDisplay):
         super().__init__(device)
 
         self.active_field = "entry_field"
@@ -48,7 +48,7 @@ class ProgCalcController():
 
     formats = ["DEC", "HEX", "BIN"]
 
-    def __init__(self, display_device: TextDevice, input_device: evdev.InputDevice):
+    def __init__(self, display_device: TextDisplay, input_device: evdev.InputDevice):
         self.display = display_device
         self.ui = CalcUI(self.display)
         self.input_device = input_device

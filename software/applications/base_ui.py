@@ -50,7 +50,6 @@ class TextField():
 
 class ScrollableTextField(TextField):
     """
-    TODO
     A text field which may contain more than rows*cols characters, allowing
     vertical scrolling
     """
@@ -82,7 +81,7 @@ class ScrollableTextField(TextField):
         return self.top_row / self.max_scroll
 
 
-class TextDevice(ABC):
+class TextDisplay(ABC):
     """
     any text device should be able to do at least a subset of what CharLcd does
     e.g. clear, set cursor position, write data, etc.
@@ -113,13 +112,19 @@ class TextDevice(ABC):
         pass
 
 
+class KeyInput(ABC):
+    """
+    A key input object will yield a series of keypresses from 'somewhere'
+    """
+    pass
+
 class TextUI():
     """
     TextUI is a layer on top of a TextDevice to maintain a set of fields and
     to control drawing them
     """
 
-    def __init__(self, display_device: TextDevice):
+    def __init__(self, display_device: TextDisplay):
         """
         Initialize any state needed by the display device
         """

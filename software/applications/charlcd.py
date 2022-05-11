@@ -1,10 +1,10 @@
 
 import os
 
-from base_ui import TextDevice
+from base_ui import TextDisplay
 
 
-class CharLcd(TextDevice):
+class CharLcd(TextDisplay):
 
     RESET_FILE = "reset"
     BACKLIGHT_FILE = "brightness"

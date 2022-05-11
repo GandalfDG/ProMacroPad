@@ -2,11 +2,11 @@ import curses
 import evdev
 from os import device_encoding
 
-from base_ui import TextDevice, TextField, TextUI
+from base_ui import TextDisplay, TextField, TextUI
 import progcalc
 
 
-class CursesDevice(TextDevice):
+class CursesDevice(TextDisplay):
 
 
     def setup(self):
