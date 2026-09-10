@@ -21,3 +21,6 @@ That's where the ProMacroPad comes in.
 ## Components to be built
 - Laser-cut case
 - Perfboard to wire up the keypad and display
+
+# Detailed Project Writeup
+find a detailed narrative writeup of this project on my website [https://jack-case.pro/](https://www.jack-case.pro/projects/programmers_calculator/)
